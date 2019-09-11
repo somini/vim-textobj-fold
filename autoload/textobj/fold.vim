@@ -3,7 +3,7 @@
 " Copyright (C) 2008-2013 Kana Natsuno <http://whileimautomaton.net/>
 " License: MIT license
 " Public Interface  "{{{1
-function! textobj#fold#select_a()
+function! textobj#fold#select_a() abort
   call s:move_to_the_start_point()
   let selection_starts_with_fold_p = !s:in_non_fold_p()
   let start_pos = getpos('.')
@@ -17,7 +17,7 @@ function! textobj#fold#select_a()
   return ['V', start_pos, end_pos]
 endfunction
 
-function! textobj#fold#select_i()
+function! textobj#fold#select_i() abort
   call s:move_to_the_start_point()
   let start_pos = getpos('.')
   if &foldmethod ==# 'marker'
@@ -39,7 +39,7 @@ function! textobj#fold#select_i()
 endfunction
 
 " Movement  "{{{1
-function! s:move_to_the_start_point()
+function! s:move_to_the_start_point() abort
   if s:in_open_fold_p()
     call s:move_to_the_start_of_open_fold()
   elseif s:in_closed_fold_p()
@@ -49,7 +49,7 @@ function! s:move_to_the_start_point()
   endif
 endfunction
 
-function! s:move_to_the_start_of_open_fold()
+function! s:move_to_the_start_of_open_fold() abort
   let level = foldlevel(line('.'))
   normal! [z
   if foldlevel(line('.')) < level
@@ -57,11 +57,11 @@ function! s:move_to_the_start_of_open_fold()
   endif
 endfunction
 
-function! s:move_to_the_start_of_closed_fold()
+function! s:move_to_the_start_of_closed_fold() abort
   call cursor(foldclosed(line('.')), 1)
 endfunction
 
-function! s:move_to_the_start_of_non_fold()
+function! s:move_to_the_start_of_non_fold() abort
   let orig_line = line('.')
   normal! zk
   if orig_line != line('.')
@@ -72,7 +72,7 @@ function! s:move_to_the_start_of_non_fold()
 endfunction
 
 
-function! s:move_to_the_end_point(mode, selection_starts_with_fold_p)
+function! s:move_to_the_end_point(mode, selection_starts_with_fold_p) abort
   if s:in_open_fold_p()
     call s:move_to_the_end_of_open_fold()
   elseif s:in_closed_fold_p()
@@ -116,7 +116,7 @@ function! s:move_to_the_end_point(mode, selection_starts_with_fold_p)
   endif
 endfunction
 
-function! s:move_to_the_end_of_open_fold()
+function! s:move_to_the_end_of_open_fold() abort
   let level = foldlevel(line('.'))
   normal! ]z
   if foldlevel(line('.')) < level
@@ -124,12 +124,12 @@ function! s:move_to_the_end_of_open_fold()
   endif
 endfunction
 
-function! s:move_to_the_end_of_closed_fold()
+function! s:move_to_the_end_of_closed_fold() abort
   call cursor(foldclosedend(line('.')), 0)
   normal! $
 endfunction
 
-function! s:move_to_the_end_of_non_fold()
+function! s:move_to_the_end_of_non_fold() abort
   let orig_line = line('.')
   normal! zj
   if orig_line != line('.')
@@ -140,17 +140,17 @@ function! s:move_to_the_end_of_non_fold()
 endfunction
 
 " Predicates  "{{{1
-function! s:in_open_fold_p()
+function! s:in_open_fold_p() abort
   return foldclosed(line('.')) < 0 && 0 < foldlevel(line('.'))
 endfunction
 
 
-function! s:in_closed_fold_p()
+function! s:in_closed_fold_p() abort
   return 0 < foldclosed(line('.'))
 endfunction
 
 
-function! s:in_non_fold_p()
+function! s:in_non_fold_p() abort
   return foldlevel(line('.')) == 0
 endfunction
 
